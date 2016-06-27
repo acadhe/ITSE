@@ -906,10 +906,7 @@
                 zoom: 11,
               });              
 
-              L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              }).addTo(map_object);
-
+            
 
               // Add data layer to your map
               cartodb.createLayer(map_object,layerSource)
