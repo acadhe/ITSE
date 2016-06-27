@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Gentry Map CDMX
+        </title>
+
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+        <link rel="shortcut icon" href="ac_logo.png" />
+
+        <link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+        <link rel="stylesheet" href="https://academy.cartodb.com/css/cdbui.css" type="text/css" />
+
+        <link rel="stylesheet" type="text/css" href="style.css">
+        
+           <style type="text/css">
+
+            * {
+              box-sizing: border-box;
+              font-family: Gill Sans, sans-serif;
+
+              }
+             html, body {
+                 height: 100%;
+                 padding: 0;
+                 margin: 0;
+             }
+             #map {
+                 height: 100%;
+                 padding: 0;
+                 margin: 0;
+             }
+
+             #filtradores {
+              position: absolute;
+              z-index: 10;
+              left: 50%;
+              bottom:52%;
+              top: 10px;
+              width: 620px;
+              box-sizing: border-box;
+              padding: 0px;
+              display: block;
+              margin-left: auto;
+              margin-right: auto;
+
+             }
+
+            #cartocss {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                width: 310px;
+                height: 100%;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                border-left: 1px dotted gray; 
+ 
+            }
+            #sql {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                width: 310px;
+                height: 100%;  
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+
+            }
+
+            #reset  {
+                 position:relative;
+                 margin: 15px;
+                 width: 275px;
+                 text-align: center;
+                 border: 1px solid rgba(241,220,203, .6);
+                 height: 50px;
+                 font-size: 20px; 
+                 border-radius: 5px;
+                 color: white;
+                 background-color: rgba(10, 1 , 1, .5);
+                 }
+
+            #reset.sql_selected  {
+                 border: 1px solid white;
+                 }
+            #reset:hover  {
+                 border: 1px solid white;
+                 }
+
+            #select_gentry  {
+                 position:absolute;
+                 left: 0px;
+                 width: 150px;
+                 text-align: center;
+                 }
+             
+             #select_declina  {
+                 position:absolute;
+                 right: 0px;
+                 width: 150px;
+                 text-align: center;                
+                }
+
+
+              #gentry  {
+                 position:relative ;
+                 padding: 10px;
+                 font-size: 15px;
+                 color: #444;
+                 cursor: pointer;
+                 margin-bottom: 20px;
+                 height: 40px;
+                 text-align: center;
+                 border-radius: 5px;
+                 width: 120px;                 
+                 display: block;
+                 margin-left: auto;
+                 margin-right: auto;
+
+                 }
+             #gentry:first-child  {
+              border: 1px solid red;
+              color: white;
+              background-color: rgba(10, 1 , 1, .5);
+
+                 }
+             #gentry:nth-child(2)  {
+                 background-color: rgba(117, 12, 17, .6);
+                 color: white;
+
+                 }
+             #gentry:nth-child(3)  {
+                 background-color: rgba(180, 9, 3, .6);
+                 color: white;
+                 }
+             #gentry:nth-child(4)  {
+                 background-color: rgba(249, 79, 64, .6);
+                 color: white;
+                 }
+              #gentry.sql_selected  {
+                 border: 1px solid white;
+                 }
+              #gentry:hover  {
+                 border: 1px solid white;
+                 }
+
+             #declina  {
+                 position:relative;
+                 padding: 10px;
+                 font-size: 15px;
+                 color: #444;
+                 cursor: pointer;
+                 margin-bottom: 20px;
+                 height: 40px;
+                 border-radius: 5px;
+                 width: 120px;
+                 display: block;
+                 margin-left: auto;
+                 margin-right: auto;
+             }
+
+             #declina:first-child  {
+              border: 1px solid rgba(92, 162, 209, .9);
+              background-color: rgba(10, 1 , 1, .5);
+              color: white;
+                 }
+             #declina:nth-child(2)  {
+                 background-color: rgba(46, 83, 135, .6);
+                 color: white;
+                 }
+             #declina:nth-child(3)  {
+                 background-color: rgba(33, 103, 171, .6);
+                 color: white;
+                 }
+             #declina:nth-child(4)  {
+                 background-color: rgba(92, 162, 209, .6);
+                 color: white;
+                 }
+              #declina.sql_selected  {
+                 border: 1px solid white;
+                 }
+              #declina:hover  {
+                  border: 1px solid white;
+                  }
+
+            /*css customizaton*/
+
+            #cartocss > #select_gentry > ul > li{
+                 position:relative ;
+                 padding: 10px;
+                 font-size: 15px;
+                 color: #B0134D;
+                 cursor: pointer;
+                 bottom: 0px;            
+                 margin-bottom: 20px;
+                 height: 40px;
+                 border-radius: 5px;
+                 width: 120px;                 
+                 display: block;
+                 margin-left: auto;
+                 margin-right: auto;
+            }
+
+            #cartocss > #select_gentry > ul > li:first-child  {
+              background-image: url("icons/pob.png");
+              background-repeat: no-repeat;
+              top:0%;
+              background-position: 50%;
+              background-size: 50% auto;
+              font-size: 0px;
+                 }
+
+            #cartocss > #select_gentry > ul > li:first-child:hover {
+              background-image: url("");
+              font-size: 15px;
+              border: 1px dotted #B0137E;
+              background-color: black;
+
+                 }
+            
+            #cartocss > #select_gentry > ul > li:nth-child(2)  {
+              background-image: url("icons/pob04.png");
+              background-repeat: no-repeat;
+              background-position: 50%;
+              background-size: 35% auto;
+              font-size: 0px;
+                 }
+
+            #cartocss > #select_gentry > ul > li:nth-child(2):hover {
+              background-image: url("");
+              font-size: 15px;
+              border: 1px dotted #B0137E;
+
+                 }
+            
+            #cartocss > #select_gentry > ul > li:nth-child(3)  {
+              background-image: url("icons/pob65.png");
+              background-repeat: no-repeat;
+              background-position: 50%;
+              background-size: 32% auto;
+              font-size: 0px;
+                 }
+
+            #cartocss > #select_gentry > ul > li:nth-child(3):hover {
+              background-image: url("");
+              font-size: 15px;
+              border: 1px dotted #B0137E;
+
+                 }
+            
+            #cartocss > #select_gentry > ul > li:nth-child(4) {
+              background-image: url("icons/fertil.png");
+              background-repeat: no-repeat;
+              background-position: 50%;
+              background-size: 35% auto;
+              font-size: 0px;
+                 }
+
+            #cartocss > #select_gentry > ul > li:nth-child(4):hover {
+              background-image: url("");
+              font-size: 15px;
+              border: 1px dotted #B0137E;
+
+                 }
+           
+
+
+            #cartocss > #select_declina > ul > li{
+                 position:relative ;
+                 padding: 10px;
+                 font-size: 15px;
+                 color: #B0134D;
+                 cursor: pointer;
+                 bottom: 0px;            
+                 margin-bottom: 20px;
+                 height: 40px;
+                 border-radius: 5px;
+                 width: 120px;                 
+                 display: block;
+                 margin-left: auto;
+                 margin-right: auto;
+
+            }
+
+            #cartocss > #select_declina > ul > li:first-child  {
+              background-image: url("icons/edu.png");
+              background-repeat: no-repeat;
+              top:0%;
+              background-position: 50%;
+              background-size: 50% auto;
+              font-size: 0px;
+                 }
+
+            #cartocss > #select_declina > ul > li:first-child:hover {
+              background-image: url("");
+              font-size: 15px;
+              border: 1px dotted #B0137E;
+              background-color: black;
+
+                 }
+            
+            #cartocss > #select_declina > ul > li:nth-child(2)  {
+              background-image: url("icons/viv.png");
+              background-repeat: no-repeat;
+              background-position: 50%;
+              background-size: 35% auto;
+              font-size: 0px;
+                 }
+
+            #cartocss > #select_declina > ul > li:nth-child(2):hover {
+              background-image: url("");
+              font-size: 15px;
+              border: 1px dotted #B0137E;
+              padding: 0px 10px 10px 10px;
+                 }
+            
+            #cartocss > #select_declina > ul > li:nth-child(3)  {
+              background-image: url("icons/viv_ocuc.png");
+              background-repeat: no-repeat;
+              background-position: 50%;
+              background-size: 32% auto;
+              font-size: 0px;
+                 }
+
+            #cartocss > #select_declina > ul > li:nth-child(3):hover {
+              background-image: url("");
+              font-size: 15px;
+              padding: 0px;
+              border: 1px dotted #B0137E;
+
+                 }
+            
+            #cartocss > #select_declina > ul > li:nth-child(4) {
+              background-image: url("icons/viv_compu.png");
+              background-repeat: no-repeat;
+              background-position: 50%;
+              background-size: 35% auto;
+              font-size: 0px;
+                 }
+
+            #cartocss > #select_declina > ul > li:nth-child(4):hover {
+              background-image: url("");
+              font-size: 15px;
+              border: 1px dotted #B0137E;
+              padding: 0px;
+                 }
+           
+
+             /*.layer_selector {
+                 background: rgba(255,255,255,0.9);
+                 border-radius: 20px;
+                 padding: 0;
+                 border: 1px solid #999;
+                 width: 250px;
+             }  */
+             
+             .layer_selector > p {
+                 padding: 0px;
+                 border-bottom: 1px solid #999;
+             }
+             
+             .layer_selector ul {
+                 padding: 0; margin: 0;
+                 list-style-type: none;
+                 width:100%;
+             }
+
+
+             .layer_selector li {
+                 padding: 15px 30px;
+                 font-size: 13px;
+                 color: #444;
+                 cursor: pointer;
+             }
+
+             .layer_selector li:not(:last-child) {
+                 border-bottom: 0px solid #999;
+             }
+             
+             /*.layer_selector li:hover {
+                 background-color: #F0F0F0;
+                 cursor: pointer;
+                 border-radius: 0 0 20px 20px;
+             } */
+             /*.layer_selector li.sql_selected,
+             .layer_selector li.cartocss_selected {
+            background: rgba(255,255,255,0.9)
+             }  */
+            
+
+             #description{
+               font-family: Gill Sans, sans-serif;
+               text-transform: none;
+               position: absolute;
+               top:50%; 
+               max-height: 47%;                          
+               left: 50%;
+               width: 620px;
+               background: rgba(255,255,255,0.1);
+               overflow: auto;
+               z-index: 10;
+               border: 1px solid white;
+               border-radius: 10px;
+               box-sizing: border-box;
+             }
+
+             #description:hover{
+               font-family: Gill Sans, sans-serif;
+               text-transform: none;
+               position: absolute;
+               top:50%; 
+               max-height: 47%;                          
+               left: 50%;
+               width: 620px;
+               background: black;
+               overflow: auto;
+               z-index: 10;
+               border: 1px solid gray;
+               border-radius: 10px;
+               box-sizing: border-box;
+             }
+
+             #description > h1{
+               text-align: center;
+               color: white;
+               font-size: 1.5em;
+               text-transform: capitalize;
+
+
+             }
+
+             #description > p{
+               margin: 20px 20px 20px 20px;
+               text-align: justify;
+               color: white;
+               line-height: 1.5em;
+             }
+             
+
+
+
+        </style>
+           
+        <style type="cartocss/html" id="simple">
+
+            #itse_final {
+               polygon-opacity: 0.7;
+               line-color: #FFF;
+               line-width: 0;
+               line-opacity: 0.6;
+            }
+
+            #itse_final[categoria="Sin Datos"] {
+               polygon-fill: #282828;
+            }
+            #itse_final[categoria="Sin cambios"] {
+               polygon-fill: rgba(168, 178, 167, .4);
+            }
+            #itse_final[categoria="en proceso de deterioro ligero"] {
+               polygon-fill: #5CA2D1;
+            }
+            #itse_final[categoria="en proceso de deterioro medio"] {
+               polygon-fill: #2167AB;
+            }
+            #itse_final[categoria="en proceso de deterioro severo"] {
+               polygon-fill: #2E5387;
+            }
+            #itse_final[categoria="proceso de gentrificacion ligero"] {
+               polygon-fill: #F84F40;
+            }
+            #itse_final[categoria="proceso de gentrificacion medio"] {
+               polygon-fill: #B40903;
+            }
+            #itse_final[categoria="proceso de gentrificacion servero"] {
+               polygon-fill: #B81609;
+            }
+                          
+
+
+        </style>
+
+        <style type="cartocss/html" id="pob">                
+                /** Pob total*/
+
+                  #itse_final {
+                     polygon-opacity: 0.6;
+                     line-color: #000000;
+                     line-width: 0.2;
+                     line-opacity: 0.3;
+                  }
+                  #itse_final[pobtot="+1"] {
+                     polygon-fill: #F84F40;
+                  }
+                  #itse_final[pobtot="-1"] {
+                     polygon-fill: #2E5387;
+                  }
+                  #itse_final[pobtot="Sin Poblacion"] {
+                     polygon-fill: rgba(168, 178, 167, .4);
+                  }
+                  #itse_final[pobtot="Sin datos"] {
+                     polygon-fill: #000000;
+                  }
+
+        </style>
+
+         <style type="cartocss/html" id="pob04">                
+                /** Pob total*/
+
+                  #itse_final {
+                     polygon-opacity: 0.6;
+                     line-color: #FFF;
+                     line-width: 0;
+                     line-opacity: 0.3;
+                  }
+
+                  #itse_final[pob04="+1"] {
+                     polygon-fill: #F84F40;
+                  }
+                  #itse_final[pob04="-1"] {
+                     polygon-fill: #2167AB;
+                  }
+                  #itse_final[pob04="Sin Poblacion"] {
+                     polygon-fill: rgba(168, 178, 167, .4);
+                  }
+                  #itse_final[pob04="Sin datos"] {
+                     polygon-fill: #000000;
+                  }
+
+        </style>
+
+         <style type="cartocss/html" id="pob65">                
+                /** Pob total*/
+
+                  #itse_final {
+                     polygon-opacity: 0.6;
+                     line-color: #FFF;
+                     line-width: 0;
+                     line-opacity: 0.3;
+                  }
+
+                  #itse_final[pob65="+1"] {
+                     polygon-fill: #F84F40;
+                  }
+                  #itse_final[pob65="-1"] {
+                     polygon-fill: #2167AB;
+                  }
+                  #itse_final[pob65="Sin Poblacion"] {
+                     polygon-fill: rgba(168, 178, 167, .4);
+                  }
+                  #itse_final[pob65="Sin datos"] {
+                     polygon-fill: #000000;
+                  }
+
+        </style>
+
+         <style type="cartocss/html" id="fertil">                
+                /** Pob total*/
+
+                  #itse_final {
+                     polygon-opacity: 0.6;
+                     line-color: #FFF;
+                     line-width: 0;
+                     line-opacity: 0.3;
+                  }
+
+                  #itse_final[fecu="+1"] {
+                     polygon-fill: #F84F40;
+                  }
+                  #itse_final[fecu="-1"] {
+                     polygon-fill: #2167AB;
+                  }
+                  #itse_final[fecu="Sin Poblacion"] {
+                     polygon-fill: rgba(168, 178, 167, .4);
+                  }
+                  #itse_final[fecu="Sin datos"] {
+                     polygon-fill: #000000;
+                  }
+
+        </style>
+
+         <style type="cartocss/html" id="esc">                
+                /** Pob total*/
+
+                  #itse_final {
+                     polygon-opacity: 0.6;
+                     line-color: #FFF;
+                     line-width: 0;
+                     line-opacity: 0.3;
+                  }
+
+                  #itse_final[gprom="+1"] {
+                     polygon-fill: #F84F40;
+                  }
+                  #itse_final[gprom="-1"] {
+                     polygon-fill: #2167AB;
+                  }
+                  #itse_final[gprom="Sin Poblacion"] {
+                     polygon-fill: rgba(168, 178, 167, .4);
+                  }
+                  #itse_final[gprom="Sin datos"] {
+                     polygon-fill: #000000;
+                  }
+
+        </style>
+
+         <style type="cartocss/html" id="viv">                
+                /** Pob total*/
+
+                  #itse_final {
+                     polygon-opacity: 0.6;
+                     line-color: #FFF;
+                     line-width: 0;
+                     line-opacity: 0.3;
+                  }
+
+                  #itse_final[vivtot="+1"] {
+                     polygon-fill: #F84F40;
+                  }
+                  #itse_final[vivtot="-1"] {
+                     polygon-fill: #2167AB;
+                  }
+                  #itse_final[vivtot="Sin Poblacion"] {
+                     polygon-fill: rgba(168, 178, 167, .4);
+                  }
+                  #itse_final[vivtot="Sin datos"] {
+                     polygon-fill: #000000;
+                  }
+
+        </style>
+
+         <style type="cartocss/html" id="vivocu">                
+                /** Pob total*/
+
+                  #itse_final {
+                     polygon-opacity: 0.6;
+                     line-color: #FFF;
+                     line-width: 0;
+                     line-opacity: 0.3;
+                  }
+
+                  #itse_final[ocuc="+1"] {
+                     polygon-fill: #F84F40;
+                  }
+                  #itse_final[ocuc="-1"] {
+                     polygon-fill: #2167AB;
+                  }
+                  #itse_final[ocuc="Sin Poblacion"] {
+                     polygon-fill: rgba(168, 178, 167, .4);
+                  }
+                  #itse_final[ocuc="Sin datos"] {
+                     polygon-fill: #000000;
+                  }
+
+        </style>
+
+         <style type="cartocss/html" id="vivcompu">                
+                /** Pob total*/
+
+                  #itse_final {
+                     polygon-opacity: 0.6;
+                     line-color: #FFF;
+                     line-width: 0;
+                     line-opacity: 0.3;
+                  }
+
+                  #itse_final[vivcompu="+1"] {
+                     polygon-fill: #F84F40;
+                  }
+                  #itse_final[vivcompu="-1"] {
+                     polygon-fill: #2167AB;
+                  }
+                  #itse_final[vivcompu="Sin Poblacion"] {
+                     polygon-fill: rgba(168, 178, 167, .4);
+                  }
+                  #itse_final[vivcompu="Sin datos"] {
+                     polygon-fill: #000000;
+                  }
+
+        </style>
+
+  
+
+        <!-- include cartodb.js library -->
+        <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.js" type="text/javascript"></script>
+        
+        <script type="infowindow/html" id="infowindow_template">
+            <div class="cartodb-popup header orange v2">
+            <a href="#close" class="cartodb-popup-close-button close">x</a>
+            <div class="cartodb-popup-header">
+              <h1>{{categoria}}</h1>
+              <span class="separator"></span>
+            </div>
+            <div class="cartodb-popup-content-wrapper">
+              <div class="cartodb-popup-content">
+                <h4>AGEB</h4>
+                <p>{{cvegeo}}</p>
+                <h4>Población Total</h4>
+                <p>{{pobtot}}</p>
+                <h4>Pob 0-4 años</h4>
+                <p>{{pob04}}</p>
+                <h4>Pob +65 años</h4>
+                <p>{{pob65}}</p>
+                <h4>Fecundidad</h4>
+                <p>{{fecu}}</p>
+                <h4>Grado prom escolaridad</h4>
+                <p>{{gprom}}</p>
+                <h4>Viviendas Totales</h4>
+                <p>{{vivtot}}</p>
+                <h4>Ocupantes por Cuarto</h4>
+                <p>{{ocuc}}</p>
+                <h4>Viviendas con Computadora</h4>
+                <p>{{vivcompu}}</p>
+                <h4>mun</h4>
+                <p>{{mun}}</p>
+              </div>
+            </div>
+            <div class="cartodb-popup-tip-container">
+            </div>
+          </div>
+        </script> 
+
+    </head>
+
+    <body>
+        <div id="map"></div>
+
+        <div id="filtradores">
+          <div id="cartocss" class="layer_selector">
+            <ul>
+                <li id= "reset" data="" data-type="sql">Variables</li>
+              </ul> 
+
+              <div id="select_gentry">
+                <ul>
+              <li data="pob" data-type="cartocss">Población Total</li>
+              <li data="pob04" data-type="cartocss">Pob 0-4 años</li>
+              <li data="pob65" data-type="cartocss"> Pob +60 años</li>
+              <li data="fertil" data-type="cartocss">Fecundación</li>
+            </ul>
+          </div>
+           <div id="select_declina">
+            <ul>
+              <li data="esc" data-type="cartocss">Escolaridad</li>
+              <li data="viv" data-type="cartocss">Viviendas Totales</li>
+              <li data="vivocu" data-type="cartocss">Ocupantes por cuarto</li>
+              <li data="vivcompu" data-type="cartocss">Viviendas con computadora</li>
+            </ul>
+          </div>
+        </div>
+          <!-- sql calls -->
+            <div id="sql" class="layer_selector">
+              <ul>
+                <li id= "reset" data="" data-type="sql">Mapa ITSE</li>
+              </ul> 
+
+              <div id="select_gentry"> 
+                <ul>
+                  <li id= "gentry" data=" WHERE categoria ILIKE '%gentrificacion%'" data-type="sql">Gentrificación</li>
+                  <li id= "gentry" data=" WHERE categoria LIKE 'proceso de gentrificacion servero'" data-type="sql">Severo</li>
+                  <li id= "gentry" data=" WHERE categoria LIKE 'proceso de gentrificacion medio'" data-type="sql">Medio</li>
+                  <li id= "gentry" data=" WHERE categoria LIKE 'proceso de gentrificacion ligero'" data-type="sql">Ligero</li>
+                </ul> 
+              </div>
+
+              <div id="select_declina"> 
+                <ul>
+                <li id= "declina" data=" WHERE categoria ILIKE '%deterioro%'" data-type="sql">Declinación</li>
+                <li id= "declina" data=" WHERE categoria LIKE 'en proceso de deterioro severo'" data-type="sql">Severo</li>
+                <li id= "declina" data=" WHERE categoria LIKE 'en proceso de deterioro medio'" data-type="sql">Medio</li>
+                <li id= "declina" data=" WHERE categoria LIKE 'en proceso de deterioro ligero'" data-type="sql">Ligero</li>
+              </ul>
+              </div> 
+            </div>
+
+        </div>           
+
+        
+        <div id="description">
+          <h1> Índice de transformación socioespacial </h1>
+          <p>El ITSE registra las transformaciones socio-espaciales atípicas experimentadas  en cada AGEB, por encima del promedio de las mismas transformaciones en toda la ciudad.</p>
+
+         <p> El método se basa en el desarrollo de un índice compuesto de ocho indicadores derivados de  variables de los Censos de Población y Vivienda 2000 y 2010, que caracterizan los diferentes grupos sociales y espacios involucrados en los procesos de gentrificación. La escala espacial  que se utilizó para el análisis de la información fueron las áreas geoestadísticas básicas (AGEB) y su relación a una escala estatal.  La elaboración estuvo compuesta de cinco fases (Bournazou, 2015): </p>
+
+          <p>
+          1.  “Identificación de las variables relevantes a la temática y desarrollo de indicadores. </br>
+          2.  Recolección de datos secundarios y homologación de estadísticas y unidades espaciales para los años 2000 y 2010.</br>
+          3.  Asignación de un valor a cada indicador, de acuerdo a su correlación con el fenómeno de la gentrificación.</br>
+          4.  Construcción del índice con base en la suma de los indicadores y su puntaje.</br>
+          5.  Elaboración, análisis e interpretación  de mapas sociales, con Sistema de Información Geográfica (SIG).”
+          </p>
+
+        <p>La construcción de cada uno de los indicadores se basó en el cambio porcentual de la variable en un ABEG y la relación porcentual con el cambio en la ciudad. Los 8 indicadores resultantes se  clasificaron en dos grandes categorías; las sociales, en las cuáles se consideró la población total, población de 0 a 4 años, población mayor a 65 años, grado promedio de escolaridad y promedio de hijos; la segunda categoría es la espacial, en la cuales se consideró el total de viviendas, promedio de habitantes por cuarto y número de viviendas con computadora. </p>
+      
+        <p>Una vez calculados los indicadores, se procedió a ponderarlos en relación a la gentrificación, donde el incremento o decrecimiento significativo de cada indicador en el universo de AGEB a la ciudad se relacionó de manera positiva o negativa al proceso de gentrificación con los siguientes supuestos: </p>
+
+        <p>
+        1.  El incremento de la Población total puede indicar auge inmobiliario y tendencia de gentrificación. (Positiva: +1) </br>
+        2.  Comúnmente existe una relación negativa entre incremento de niños y el proceso de revaloración del espacio. (Negativa: -1)</br>
+        3.  Comúnmente existe una relación negativa entre incremento de Adultos Mayores y el proceso de revaloración del espacio. (Negativa: -1) </br>
+        4.  En las zonas revalorizadas o gentrificadas  sube el promedio de nivel de instrucción de sus habitantes. (Positiva: +1)</br>
+        5.  Un número de hijos mayor que el promedio caracteriza en general a los hogares en espacios no gentrificados. (Negativa: -1) </br>
+        6.  El incremento relativo en  el número de viviendas puede dar indicios de gentrificación. (Positiva: +1)</br>
+        7.  El incremento promedio relativo de ocupantes por cuarto se asocia con procesos de desvalorización del espacio. (Negativa: -1) </br>
+        8.  El aumento relativo en hogares con computadora indica grupos sociales  más afluentes. (Positiva: +1) 
+        </p>
+
+        </div>
+
+        
+        <!-- Place your code in the script tags below -->
+        <script type="text/javascript">
+            window.onload = function () {
+
+
+             /* // Create layer selector only visualization
+                function createSelector(layer) {
+                  var cartocss = "";
+                  var $options = $(".layer_selector").find("li");
+                  $options.click(function(e) {
+                    var $li = $(e.target);
+                    var selected = $li.attr('data');
+
+                    $options.removeClass('cartocss_selected');
+                    $li.addClass('cartocss_selected');
+
+                    cartocss = $('#'+selected).text();
+
+                    layer.setCartoCSS(cartocss);
+                  });
+                } */
+
+                // Create layer selector applying sql queries
+                  function createSelector(layer) {
+                  var condition = ""; // SQL or CartoCSS string
+                  var $options = $(".layer_selector").find("li");
+                  
+                  $options.click(function(e) {
+                    var $li = $(e.target);
+                    var selected = $li.attr('data');
+                    var type = $li.data('type'); // 'sql' or 'cartocss'
+
+                    if (type === "cartocss") { // if a CartoCSS selector is chosen, set the style
+                      $options.removeClass('cartocss_selected');
+                      if (selected !== "simple") {
+                        $li.addClass('cartocss_selected');
+                      }
+
+                    /*if (selected !== -1) {
+                            map_object.setView(L.latLng([19.385732, -98.932607]),11);
+                        }*/
+                    layer.setSQL("SELECT * FROM " + tableName);
+
+                    condition = $('#'+selected).text();
+                      layer.setCartoCSS(condition);
+
+                      
+                    } else { // if a SQL selector is chosen, re-query the data
+                      $options.removeClass('sql_selected');
+                      if (selected !== "") {
+                        $li.addClass('sql_selected');
+                      }
+                       /* if (selected.indexOf('habitada') !== -1) {
+                            map_object.setView(L.latLng([-9.5, 147.116667]),6);
+                        } else {
+                            map_object.setView(L.latLng([19.385732, -98.932607]),11); 
+                        } */
+                      if (selected !== -1) {
+                            map_object.setView(L.latLng([19.385732, -98.932607]),11);
+                        }
+
+                      if (selected !== -1) {
+                            layer.setCartoCSS($("#simple").text());
+                        }
+
+                      layer.setSQL("SELECT * FROM " + tableName + selected);
+                    }
+                  });
+
+
+                }
+
+            // Call a table
+              var tableName = "itse_final";
+
+ 
+              // Put layer data into a JS object
+              var layerSource = {
+                user_name: 'acadhe', 
+                type: 'cartodb',
+                cartodb_logo: false,
+                sublayers: [{ 
+                  sql: "SELECT * FROM " + tableName, // All recorded earthquakes past 30 days
+                  cartocss: $("#simple").text() // Simple visualization
+                 
+                           }]
+              } 
+
+                // Instantiate new map object, place it in 'map' element
+              var map_object = new L.Map('map', {
+                center: [19.385732, -98.932607], // San Francisco
+                zoom: 11,
+              });              
+
+              L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              }).addTo(map_object);
+
+
+              // Add data layer to your map
+              cartodb.createLayer(map_object,layerSource)
+                .addTo(map_object)
+                .done(function(layer) {                  
+
+                 var sublayer = layer.getSubLayer(0);
+
+                  createSelector(sublayer);
+
+                  sublayer.set(subLayerOptions);
+
+                  sublayer.infowindow.set('template', $('#infowindow_template').html());
+
+                  
+
+                 }).error(function(err) {
+                  console.log("error: " + err);
+                });
+                
+            }
+        </script>
+    </body>
+</html>
